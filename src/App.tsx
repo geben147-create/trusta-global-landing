@@ -19,22 +19,8 @@ import {
 } from "lucide-react";
 
 import { blocks, ui, type Lang } from "./copy";
-import {
-  GlobalReachMap,
-  TranslationVsLocalization,
-  SentenceRoleSplit,
-  RedOceanSaturation,
-  RedesignMapping,
-  ConversionFunnel,
-  MultiChannelDiffusion,
-  SearchToInquiry,
-  LandingReconstruction,
-  HumanGate,
-  MonthlyCalendar,
-  PerformanceDashboard,
-  OneSystemHub,
-  GrowthLadderClosing,
-} from "./Infographics";
+import * as IGv1 from "./Infographics";
+import * as IGv3 from "./InfographicsV3";
 
 /* ============================================================
    TRUSTA — 해외환자/글로벌 마케팅 랜딩
@@ -221,29 +207,34 @@ export default function App() {
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
   const [riskTab, setRiskTab] = useState(0);
   const [calc, setCalc] = useState(50);
-  const [fullWidth, setFullWidth] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
+  const [version, setVersion] = useState<"v1" | "v2" | "v3">(() => {
+    if (typeof window === "undefined") return "v1";
     const q = new URLSearchParams(window.location.search);
-    return q.get("full") === "1" || q.get("layout") === "full";
+    if (q.get("v") === "3" || q.get("v") === "v3") return "v3";
+    if (q.get("full") === "1" || q.get("layout") === "full" || q.get("v") === "2") return "v2";
+    return "v1";
   });
   const scrollVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const t = ui[lang];
   const B = (id: string): string[] => blocks[id][lang];
 
-  const toggleFull = () => {
-    setFullWidth((v) => {
-      const next = !v;
-      try {
-        const url = new URL(window.location.href);
-        if (next) url.searchParams.set("full", "1");
-        else url.searchParams.delete("full");
-        window.history.replaceState({}, "", url.toString());
-      } catch {
-        /* noop */
-      }
-      return next;
-    });
+  const fullWidth = version === "v2";
+  const IG = version === "v3" ? IGv3 : IGv1;
+
+  const chooseVersion = (v: "v1" | "v2" | "v3") => {
+    setVersion(v);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("full");
+      url.searchParams.delete("layout");
+      if (v === "v1") url.searchParams.delete("v");
+      else if (v === "v2") url.searchParams.set("v", "2");
+      else url.searchParams.set("v", "3");
+      window.history.replaceState({}, "", url.toString());
+    } catch {
+      /* noop */
+    }
   };
 
   const notify = (msg: string) => {
@@ -322,7 +313,7 @@ export default function App() {
     <div
       className={`relative isolate min-h-screen w-full bg-[#FAFCFF] overflow-x-hidden flex flex-col font-sans text-slate-800 scroll-smooth leading-relaxed${
         fullWidth ? " layout-full" : ""
-      }`}
+      }${version === "v3" ? " layout-v3" : ""}`}
       style={{ wordBreak: "keep-all" }}
     >
       {/* background video */}
@@ -415,24 +406,22 @@ export default function App() {
             </div>
 
             <div className="hidden md:flex items-center rounded-full bg-white/60 border border-white/70 p-0.5">
-              <button
-                onClick={() => fullWidth && toggleFull()}
-                className={`px-3 py-1.5 rounded-full text-[9px] font-bold tracking-widest cursor-pointer ${
-                  !fullWidth ? "bg-slate-950 text-white shadow-sm" : "text-slate-400 hover:text-slate-900"
-                }`}
-                title={lang === "ko" ? "기본 (중앙 정렬)" : "Boxed (centered)"}
-              >
-                {lang === "ko" ? "기본" : "BOXED"}
-              </button>
-              <button
-                onClick={() => !fullWidth && toggleFull()}
-                className={`px-3 py-1.5 rounded-full text-[9px] font-bold tracking-widest cursor-pointer ${
-                  fullWidth ? "bg-slate-950 text-white shadow-sm" : "text-slate-400 hover:text-slate-900"
-                }`}
-                title={lang === "ko" ? "풀폭 (좌우 여백 없음)" : "Full width"}
-              >
-                {lang === "ko" ? "풀폭" : "FULL"}
-              </button>
+              {([
+                { v: "v1", ko: "기본", en: "BOXED", t: lang === "ko" ? "기본 (중앙 정렬)" : "Boxed" },
+                { v: "v2", ko: "풀폭", en: "FULL", t: lang === "ko" ? "풀폭 (좌우 여백 없음)" : "Full width" },
+                { v: "v3", ko: "증거", en: "V3", t: lang === "ko" ? "버전3 (증거카드·흰 배경)" : "Version 3 (evidence)" },
+              ] as const).map((o) => (
+                <button
+                  key={o.v}
+                  onClick={() => chooseVersion(o.v)}
+                  className={`px-3 py-1.5 rounded-full text-[9px] font-bold tracking-widest cursor-pointer ${
+                    version === o.v ? "bg-slate-950 text-white shadow-sm" : "text-slate-400 hover:text-slate-900"
+                  }`}
+                  title={o.t}
+                >
+                  {lang === "ko" ? o.ko : o.en}
+                </button>
+              ))}
             </div>
 
             <button
@@ -472,18 +461,26 @@ export default function App() {
                   {lang === "ko" ? s.ko : s.en}
                 </button>
               ))}
-              <button
-                onClick={() => {
-                  toggleFull();
-                  setMobileMenuOpen(false);
-                }}
-                className="mt-1 px-4 py-2.5 text-left rounded-xl text-[11px] font-bold tracking-wider uppercase transition-all cursor-pointer flex items-center justify-between text-slate-600 hover:bg-white/40"
-              >
-                <span>{lang === "ko" ? "레이아웃" : "Layout"}</span>
-                <span className="text-[#d4af37]">
-                  {fullWidth ? (lang === "ko" ? "풀폭" : "FULL") : lang === "ko" ? "기본" : "BOXED"}
-                </span>
-              </button>
+              <div className="mt-1 px-1 py-1 rounded-xl bg-white/50 border border-slate-100 flex items-center gap-1">
+                {([
+                  { v: "v1", ko: "기본", en: "BOXED" },
+                  { v: "v2", ko: "풀폭", en: "FULL" },
+                  { v: "v3", ko: "증거", en: "V3" },
+                ] as const).map((o) => (
+                  <button
+                    key={o.v}
+                    onClick={() => {
+                      chooseVersion(o.v);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex-1 px-2 py-2 rounded-lg text-[10px] font-bold tracking-wider uppercase cursor-pointer ${
+                      version === o.v ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-white/60"
+                    }`}
+                  >
+                    {lang === "ko" ? o.ko : o.en}
+                  </button>
+                ))}
+              </div>
               <div className="mt-2 pt-3 border-t border-slate-100/60 flex items-center justify-between">
                 <button
                   onClick={() => {
@@ -601,7 +598,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
-            <GlobalReachMap lang={lang} />
+            <IG.GlobalReachMap lang={lang} />
           </motion.div>
         </div>
       </section>
@@ -610,11 +607,11 @@ export default function App() {
       <SectionShell id="proof" tint="from-[#FAFCFF]/30 to-[#F5FAFC]/10">
         <div className="space-y-20">
           <Story label={t.sectionLabels.proof} lines={B("b2_translation")} side="right">
-            <TranslationVsLocalization lang={lang} />
+            <IG.TranslationVsLocalization lang={lang} />
           </Story>
 
           <Story label={t.sectionLabels.proof} lines={B("b3_roles")} side="left">
-            <SentenceRoleSplit lang={lang} />
+            <IG.SentenceRoleSplit lang={lang} />
           </Story>
 
           {/* b4 + interactive risk comparator */}
@@ -704,22 +701,22 @@ export default function App() {
       <SectionShell id="services" tint="from-[#F5FAFC]/25 to-[#FAFCFF]/15">
         <div className="space-y-20">
           <Story label={t.sectionLabels.reality} lines={B("b5_redocean")} side="left">
-            <RedOceanSaturation lang={lang} />
+            <IG.RedOceanSaturation lang={lang} />
           </Story>
           <Story label={t.sectionLabels.reality} lines={B("b6_redesign")} side="right" headingSize="lg">
-            <RedesignMapping lang={lang} />
+            <IG.RedesignMapping lang={lang} />
           </Story>
           <Story label={t.sectionLabels.reality} lines={B("b7_funnel")} side="left">
-            <ConversionFunnel lang={lang} />
+            <IG.ConversionFunnel lang={lang} />
           </Story>
           <Story label={t.sectionLabels.services} lines={B("b8_multichannel")} side="right" headingSize="lg">
-            <MultiChannelDiffusion lang={lang} />
+            <IG.MultiChannelDiffusion lang={lang} />
           </Story>
           <Story label={t.sectionLabels.search} lines={B("b9_search")} side="left">
-            <SearchToInquiry lang={lang} />
+            <IG.SearchToInquiry lang={lang} />
           </Story>
           <Story label={t.sectionLabels.services} lines={B("b10_landing")} side="right">
-            <LandingReconstruction lang={lang} />
+            <IG.LandingReconstruction lang={lang} />
           </Story>
         </div>
       </SectionShell>
@@ -783,7 +780,7 @@ export default function App() {
 
         <div className="mt-16">
           <Story label={t.sectionLabels.gate} lines={B("b15_gate")} side="left" headingSize="lg">
-            <HumanGate lang={lang} />
+            <IG.HumanGate lang={lang} />
           </Story>
         </div>
       </SectionShell>
@@ -792,7 +789,7 @@ export default function App() {
       <SectionShell id="ops" tint="from-[#FAFCFF]/25 to-[#E8EEF5]/20">
         <div className="space-y-20">
           <Story label={t.sectionLabels.ops} lines={B("b16_calendar")} side="right">
-            <MonthlyCalendar lang={lang} />
+            <IG.MonthlyCalendar lang={lang} />
           </Story>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -866,7 +863,7 @@ export default function App() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             >
-              <PerformanceDashboard lang={lang} />
+              <IG.PerformanceDashboard lang={lang} />
             </motion.div>
           </div>
         </div>
@@ -916,7 +913,7 @@ export default function App() {
 
           {/* b19 one system */}
           <Story label={t.sectionLabels.packages} lines={B("b19_onesystem")} side="left" headingSize="lg">
-            <OneSystemHub lang={lang} />
+            <IG.OneSystemHub lang={lang} />
           </Story>
 
           {/* b20 package tiers */}
@@ -1014,7 +1011,7 @@ export default function App() {
 
           {/* b22 closing-encouragement */}
           <Story label={t.sectionLabels.closing} lines={B("b22_small")} side="right" headingSize="lg">
-            <GrowthLadderClosing lang={lang} />
+            <IG.GrowthLadderClosing lang={lang} />
           </Story>
         </div>
       </SectionShell>

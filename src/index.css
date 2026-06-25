@@ -63,6 +63,27 @@
   padding-right: clamp(0.75rem, 1.6vw, 1.75rem);
 }
 
+/* ── Version 3 — "evidence section" redesign (?v=3 / 증거 토글):
+   clean WHITE background from the services block downward (hero + proof keep
+   the cloud video), wider evidence content column, more generous section
+   rhythm per the layout 규격집. Infographics swap to the white evidence-card set. ── */
+.layout-v3 #services,
+.layout-v3 #faq,
+.layout-v3 #ops,
+.layout-v3 #packages,
+.layout-v3 #process,
+.layout-v3 #contact {
+  background: #ffffff;
+  border-top-color: rgb(241 245 249 / 0.9);
+}
+.layout-v3 :is(.max-w-6xl) {
+  max-width: 1280px;
+}
+.layout-v3 > section:not(#home) {
+  padding-top: clamp(4.5rem, 6.5vw, 8.75rem);
+  padding-bottom: clamp(4.5rem, 6.5vw, 8.75rem);
+}
+
 @utility liquid-glass {
   background: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(16px);
