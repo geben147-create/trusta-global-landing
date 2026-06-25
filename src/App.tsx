@@ -126,7 +126,7 @@ function Story({
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
     >
-      {children}
+      <div className="w-full max-w-[560px] mx-auto">{children}</div>
     </motion.div>
   );
 
@@ -596,7 +596,7 @@ export default function App() {
           </div>
 
           <motion.div
-            className="lg:col-span-6"
+            className="lg:col-span-6 w-full max-w-[560px] mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}

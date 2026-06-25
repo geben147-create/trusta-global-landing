@@ -59,8 +59,8 @@
 }
 .layout-full > section,
 .layout-full > header {
-  padding-left: clamp(1rem, 3.5vw, 5rem);
-  padding-right: clamp(1rem, 3.5vw, 5rem);
+  padding-left: clamp(0.75rem, 1.6vw, 1.75rem);
+  padding-right: clamp(0.75rem, 1.6vw, 1.75rem);
 }
 
 @utility liquid-glass {

@@ -1,5 +1,4 @@
-// AUTO-GENERATED — TRUSTA infographics (inline-SVG React components). One per [사진] slot.
-import type { ReactElement } from "react";
+// AUTO-GENERATED — TRUSTA infographics (refined: compact, no clipping, mobile-safe).
 import { motion, AnimatePresence } from "motion/react";
 
 export function GlobalReachMap({ lang }: { lang: "ko" | "en" }) {
@@ -38,19 +37,27 @@ export function GlobalReachMap({ lang }: { lang: "ko" | "en" }) {
           ],
         };
 
+  // Hub centered. Outer nodes pulled well inside the viewBox so the
+  // node circles (r=20) AND their EN sublabels never touch the edges.
   const cx = 200;
-  const cy = 150;
+  const cy = 132;
   const spokes = [
-    { x: 60, y: 56 },
-    { x: 340, y: 56 },
-    { x: 36, y: 150 },
-    { x: 90, y: 256 },
-    { x: 310, y: 256 },
+    { x: 78, y: 56 }, // top-left
+    { x: 322, y: 56 }, // top-right
+    { x: 50, y: 140 }, // mid-left
+    { x: 108, y: 224 }, // bottom-left
+    { x: 292, y: 224 }, // bottom-right
   ];
 
-  const curve = (p: { x: number; y: number }) => {
+  // Verb label position along each spoke (kept inside bounds).
+  const mid = (p: { x: number; y: number }) => {
     const mx = (cx + p.x) / 2;
-    const my = (cy + p.y) / 2 - 22;
+    const my = (cy + p.y) / 2 - 16;
+    return { mx, my };
+  };
+
+  const curve = (p: { x: number; y: number }) => {
+    const { mx, my } = mid(p);
     return `M ${cx} ${cy} Q ${mx} ${my} ${p.x} ${p.y}`;
   };
 
@@ -72,14 +79,14 @@ export function GlobalReachMap({ lang }: { lang: "ko" | "en" }) {
         {L.title}
       </h3>
       <p
-        className="text-[11px] sm:text-xs text-slate-600 leading-relaxed mb-5 max-w-md"
+        className="text-[11px] sm:text-xs text-slate-600 leading-relaxed mb-4 max-w-md"
         style={{ wordBreak: "keep-all" }}
       >
         {L.sub}
       </p>
 
       <div className="relative">
-        <svg viewBox="0 0 400 312" className="w-full h-auto" aria-hidden="true">
+        <svg viewBox="0 0 400 268" className="w-full h-auto" aria-hidden="true">
           <defs>
             <radialGradient id="grm-hub" cx="50%" cy="40%" r="60%">
               <stop offset="0%" stopColor="#fffbe9" />
@@ -128,13 +135,12 @@ export function GlobalReachMap({ lang }: { lang: "ko" | "en" }) {
           ))}
 
           {spokes.map((p, i) => {
-            const tx = (cx + p.x) / 2;
-            const ty = (cy + p.y) / 2 - 22;
+            const { mx, my } = mid(p);
             return (
               <text
                 key={`verb-${i}`}
-                x={tx}
-                y={ty + 3}
+                x={mx}
+                y={my + 3}
                 textAnchor="middle"
                 className="font-mono"
                 fontSize="7"
@@ -192,13 +198,7 @@ export function GlobalReachMap({ lang }: { lang: "ko" | "en" }) {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <circle
-              cx={cx}
-              cy={cy}
-              r={40}
-              fill="#d4af37"
-              opacity={0.08}
-            />
+            <circle cx={cx} cy={cy} r={40} fill="#d4af37" opacity={0.08} />
             <circle
               cx={cx}
               cy={cy}
@@ -232,7 +232,7 @@ export function GlobalReachMap({ lang }: { lang: "ko" | "en" }) {
         </svg>
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
         {L.verbs.map((v, i) => (
           <div key={`lg-${i}`} className="flex items-center gap-1.5">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
@@ -324,75 +324,83 @@ export function TranslationVsLocalization({ lang }: { lang: "ko" | "en" }) {
         </p>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+      <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 items-stretch">
         {/* LEFT — Translation (muted / insufficient) */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative rounded-3xl border border-slate-200 bg-slate-50/60 p-5 flex flex-col"
+          className="relative rounded-3xl border border-slate-200 bg-slate-50/60 p-4 sm:p-4.5 flex flex-col"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-200/70">
-                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" aria-hidden="true">
-                  <path
-                    d="M4 7h16M4 12h10M4 17h7"
-                    fill="none"
-                    stroke="#94a3b8"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-              <div className="leading-none">
-                <p className="text-xs font-black text-slate-500">{L.leftTag}</p>
-                <p className="font-mono uppercase tracking-widest text-[9px] text-slate-400 mt-0.5">
-                  {L.leftEn}
-                </p>
-              </div>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200/70">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" aria-hidden="true">
+                <path
+                  d="M4 7h16M4 12h10M4 17h7"
+                  fill="none"
+                  stroke="#94a3b8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            <div className="leading-none min-w-0">
+              <p className="text-xs font-black text-slate-500">{L.leftTag}</p>
+              <p className="font-mono uppercase tracking-widest text-[9px] text-slate-400 mt-0.5">
+                {L.leftEn}
+              </p>
             </div>
           </div>
 
           <p
-            className="mt-3 text-[11px] text-slate-500"
+            className="mt-2.5 text-[11px] text-slate-500"
             style={{ wordBreak: "keep-all" }}
           >
             {L.leftDesc}
           </p>
 
-          <div className="mt-4 flex flex-col gap-2">
+          <div className="mt-3 flex flex-col gap-1.5">
             {L.leftRows.map((row: { src: string; dst: string }, i: number) => (
               <div
                 key={i}
-                className="flex items-center gap-2 rounded-xl bg-white/70 border border-slate-100 px-3 py-2"
+                className="rounded-xl bg-white/70 border border-slate-100 px-3 py-2"
               >
-                <span
-                  className="flex-1 text-[11px] text-slate-600 truncate"
-                  style={{ wordBreak: "keep-all" }}
-                >
-                  {row.src}
-                </span>
-                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0" aria-hidden="true">
-                  <path
-                    d="M5 12h14M13 6l6 6-6 6"
-                    fill="none"
-                    stroke="#cbd5e1"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="flex-1 text-[11px] font-mono text-slate-400 truncate text-right">
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className="text-[11px] text-slate-600 leading-snug min-w-0 break-words"
+                    style={{ wordBreak: "keep-all" }}
+                  >
+                    {row.src}
+                  </span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-3 h-3 shrink-0 text-slate-300"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M5 12h14M13 6l6 6-6 6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <span className="mt-0.5 block text-[11px] font-mono text-slate-400 leading-snug break-words">
                   {row.dst}
                 </span>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 flex items-start gap-2 rounded-xl bg-red-50/50 border border-red-100 px-3 py-2">
-            <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0 mt-px" aria-hidden="true">
+          <div className="mt-3 flex items-start gap-2 rounded-xl bg-red-50/50 border border-red-100 px-3 py-2">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-4 h-4 shrink-0 mt-px"
+              aria-hidden="true"
+            >
               <circle cx="12" cy="12" r="9" fill="none" stroke="#ef4444" strokeWidth="1.8" />
               <path
                 d="M12 7.5v5M12 16h.01"
@@ -417,14 +425,14 @@ export function TranslationVsLocalization({ lang }: { lang: "ko" | "en" }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="relative rounded-3xl border border-[#d4af37]/40 bg-gradient-to-b from-[#d4af37]/[0.06] to-white/40 p-5 flex flex-col shadow-sm"
+          className="relative rounded-3xl border border-[#d4af37]/40 bg-gradient-to-b from-[#d4af37]/[0.06] to-white/40 p-4 sm:p-4.5 flex flex-col shadow-sm overflow-hidden"
         >
           <span
             aria-hidden="true"
             className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-[#d4af37]/10 blur-2xl"
           />
           <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#d4af37]/15 ring-1 ring-[#d4af37]/40">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d4af37]/15 ring-1 ring-[#d4af37]/40">
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" aria-hidden="true">
                 <path
                   d="M12 3l2.5 5.2 5.7.8-4.1 4 1 5.7L12 21l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"
@@ -436,7 +444,7 @@ export function TranslationVsLocalization({ lang }: { lang: "ko" | "en" }) {
                 />
               </svg>
             </span>
-            <div className="leading-none">
+            <div className="leading-none min-w-0">
               <p className="text-xs font-black text-slate-950">{L.rightTag}</p>
               <p className="font-mono uppercase tracking-widest text-[9px] text-[#d4af37] mt-0.5">
                 {L.rightEn}
@@ -445,52 +453,50 @@ export function TranslationVsLocalization({ lang }: { lang: "ko" | "en" }) {
           </div>
 
           <p
-            className="mt-3 text-[11px] text-slate-600"
+            className="mt-2.5 text-[11px] text-slate-600"
             style={{ wordBreak: "keep-all" }}
           >
             {L.rightDesc}
           </p>
 
-          <div className="mt-4 flex flex-col gap-2.5">
-            {L.items.map(
-              (item: { t: string; d: string }, i: number) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: 10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.15 + i * 0.08 }}
-                  className="flex items-start gap-3 rounded-xl bg-white/70 border border-[#d4af37]/20 px-3 py-2.5"
-                >
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 mt-px">
-                    <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true">
-                      <path
-                        d="M5 12.5l4 4L19 7"
-                        fill="none"
-                        stroke="#10b981"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                  <div className="min-w-0">
-                    <p
-                      className="text-xs font-black text-slate-950 leading-snug"
-                      style={{ wordBreak: "keep-all" }}
-                    >
-                      {item.t}
-                    </p>
-                    <p
-                      className="mt-0.5 text-[10px] text-slate-500 leading-relaxed"
-                      style={{ wordBreak: "keep-all" }}
-                    >
-                      {item.d}
-                    </p>
-                  </div>
-                </motion.div>
-              )
-            )}
+          <div className="mt-3 flex flex-col gap-1.5">
+            {L.items.map((item: { t: string; d: string }, i: number) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: 10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.15 + i * 0.08 }}
+                className="flex items-start gap-2.5 rounded-xl bg-white/70 border border-[#d4af37]/20 px-3 py-2"
+              >
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 mt-px">
+                  <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true">
+                    <path
+                      d="M5 12.5l4 4L19 7"
+                      fill="none"
+                      stroke="#10b981"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <div className="min-w-0">
+                  <p
+                    className="text-xs font-black text-slate-950 leading-snug"
+                    style={{ wordBreak: "keep-all" }}
+                  >
+                    {item.t}
+                  </p>
+                  <p
+                    className="mt-0.5 text-[10px] text-slate-500 leading-relaxed"
+                    style={{ wordBreak: "keep-all" }}
+                  >
+                    {item.d}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>
@@ -506,7 +512,7 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
           title: "문장은 통째로 옮기지 않습니다",
           desc: "원본 상세페이지의 모든 문장을 한 줄씩 분해해, 다섯 개의 역할 레인으로 분류합니다.",
           input: "입력 · 원문 문장",
-          stack: ["문장 #1", "문장 #2", "문장 #3", "문장 #4", "..."],
+          stack: ["문장 #1", "문장 #2", "문장 #3", "..."],
           funnel: "역할 분류",
           recheckTitle: "재점검 항목",
           recheck: ["말투", "이미지 톤", "검색 키워드", "랜딩 흐름", "광고 리스크"],
@@ -523,7 +529,7 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
           title: "We never relocate sentences wholesale",
           desc: "Every sentence of the source page is broken out line by line and sorted into five role lanes.",
           input: "Input · source sentences",
-          stack: ["Sentence #1", "Sentence #2", "Sentence #3", "Sentence #4", "..."],
+          stack: ["Sentence #1", "Sentence #2", "Sentence #3", "..."],
           funnel: "Role split",
           recheckTitle: "Re-check chips",
           recheck: ["Tone of voice", "Image tone", "Search keywords", "Landing flow", "Ad risk"],
@@ -538,7 +544,7 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
 
   return (
     <div className="w-full rounded-[2.5rem] border border-slate-100 bg-white/70 backdrop-blur-md p-6 sm:p-8 shadow-sm overflow-hidden">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         <span className="text-[9px] font-black tracking-widest text-[#d4af37] uppercase font-mono">
           {L.eyebrow}
         </span>
@@ -556,13 +562,13 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
         </p>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.5fr)] gap-5 items-stretch">
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] gap-4 items-stretch">
         {/* Input stack */}
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2">
           <span className="font-mono uppercase tracking-widest text-[9px] text-slate-400">
             {L.input}
           </span>
-          <div className="relative flex flex-col gap-2 rounded-2xl border border-slate-100 bg-white/60 p-3.5">
+          <div className="relative flex flex-1 flex-col justify-center gap-1.5 rounded-2xl border border-slate-100 bg-white/60 p-3">
             {L.stack.map((s: string, i: number) => (
               <motion.div
                 key={i}
@@ -570,11 +576,11 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.07 }}
-                className="flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-2.5 py-2 shadow-[0_1px_0_rgba(15,23,42,0.03)]"
+                className="flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-2.5 py-1.5 shadow-[0_1px_0_rgba(15,23,42,0.03)]"
               >
-                <span className="h-1.5 w-1.5 rounded-full bg-slate-300" aria-hidden="true" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-slate-300" aria-hidden="true" />
                 <span
-                  className="font-sans text-[11px] text-slate-700 truncate"
+                  className="font-sans text-[11px] text-slate-700"
                   style={{ wordBreak: "keep-all" }}
                 >
                   {s}
@@ -599,11 +605,11 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
         </div>
 
         {/* Funnel into 5 lanes */}
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2">
           <span className="font-mono uppercase tracking-widest text-[9px] text-slate-400">
             {L.funnel}
           </span>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             {L.lanes.map(
               (
                 lane: { k: string; t: string; d: string; c: string },
@@ -615,7 +621,7 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.15 + i * 0.08 }}
-                  className="group flex items-center gap-3 rounded-xl border border-slate-100 bg-white/70 px-3 py-2.5"
+                  className="group flex items-center gap-2.5 rounded-xl border border-slate-100 bg-white/70 px-2.5 py-2"
                 >
                   <span
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
@@ -671,7 +677,7 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
                     </svg>
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline gap-2">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
                       <span
                         className="text-xs font-black text-slate-950"
                         style={{ wordBreak: "keep-all" }}
@@ -693,7 +699,7 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
                     </p>
                   </div>
                   <span
-                    className="h-8 w-1 shrink-0 rounded-full"
+                    className="h-7 w-1 shrink-0 rounded-full"
                     style={{ backgroundColor: lane.c }}
                     aria-hidden="true"
                   />
@@ -705,11 +711,11 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
       </div>
 
       {/* Re-check chips */}
-      <div className="mt-6 border-t border-slate-100 pt-4">
+      <div className="mt-4 border-t border-slate-100 pt-3">
         <span className="font-mono uppercase tracking-widest text-[9px] text-slate-400">
           {L.recheckTitle}
         </span>
-        <div className="mt-2.5 flex flex-wrap gap-2">
+        <div className="mt-2 flex flex-wrap gap-1.5">
           {L.recheck.map((chip: string, i: number) => (
             <motion.span
               key={chip}
@@ -717,10 +723,10 @@ export function SentenceRoleSplit({ lang }: { lang: "ko" | "en" }) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: i * 0.06 }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-[11px] font-medium text-slate-700"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 text-[11px] font-medium text-slate-700"
               style={{ wordBreak: "keep-all" }}
             >
-              <svg viewBox="0 0 24 24" className="h-3 w-3 text-[#d4af37]" fill="none" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="h-3 w-3 shrink-0 text-[#d4af37]" fill="none" aria-hidden="true">
                 <path
                   d="M3 12a9 9 0 0 1 15-6.7L21 8M21 12a9 9 0 0 1-15 6.7L3 16"
                   stroke="currentColor"
@@ -772,13 +778,25 @@ export function RedOceanSaturation({ lang }: { lang: "ko" | "en" }) {
           captionSub: "Spend more, seen less",
         };
 
+  // Plot area inset inside the viewBox so end points, circles and axis
+  // labels never clip at the edges of the overflow-hidden wrapper.
+  const VB_W = 300;
+  const PAD_L = 14;
+  const PAD_R = 14;
+  const PLOT_TOP = 12;
+  const PLOT_BOTTOM = 96;
+  const plotW = VB_W - PAD_L - PAD_R;
   const cost = [38, 52, 67, 84, 100];
-  const stepX = 300 / (cost.length - 1);
-  const pts = cost.map((v, i) => [i * stepX, 110 - (v / 100) * 92]);
+  const stepX = plotW / (cost.length - 1);
+  const pts = cost.map((v, i) => [
+    PAD_L + i * stepX,
+    PLOT_BOTTOM - (v / 100) * (PLOT_BOTTOM - PLOT_TOP),
+  ]);
   const linePath = pts
     .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
     .join(" ");
-  const areaPath = `${linePath} L300,110 L0,110 Z`;
+  const areaPath = `${linePath} L${(VB_W - PAD_R).toFixed(1)},${PLOT_BOTTOM} L${PAD_L},${PLOT_BOTTOM} Z`;
+  const gridYs = [PLOT_BOTTOM, 75, 54, 33, PLOT_TOP];
 
   const bars = [
     { rows: [9, 8, 7, 8, 9, 7], tone: "#94a3b8" },
@@ -813,7 +831,7 @@ export function RedOceanSaturation({ lang }: { lang: "ko" | "en" }) {
         </span>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-5">
+      <div className="mt-5 grid grid-cols-1 lg:grid-cols-5 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -824,19 +842,19 @@ export function RedOceanSaturation({ lang }: { lang: "ko" | "en" }) {
           <p className="font-mono uppercase tracking-widest text-[10px] text-slate-500">
             {L.costLabel}
           </p>
-          <svg viewBox="0 0 300 130" className="w-full h-auto mt-2" role="img">
+          <svg viewBox="0 0 300 112" className="w-full h-auto mt-2" role="img">
             <defs>
               <linearGradient id="roCostFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#ef4444" stopOpacity="0.16" />
                 <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
               </linearGradient>
             </defs>
-            {[110, 87, 64, 41, 18].map((y) => (
+            {gridYs.map((y) => (
               <line
                 key={y}
-                x1="0"
+                x1={PAD_L}
                 y1={y}
-                x2="300"
+                x2={VB_W - PAD_R}
                 y2={y}
                 stroke="#f1f5f9"
                 strokeWidth="1"
@@ -877,9 +895,9 @@ export function RedOceanSaturation({ lang }: { lang: "ko" | "en" }) {
             {L.axisYears.map((yr, i) => (
               <text
                 key={yr}
-                x={i * stepX}
-                y="124"
-                textAnchor={i === 0 ? "start" : i === L.axisYears.length - 1 ? "end" : "middle"}
+                x={PAD_L + i * stepX}
+                y="108"
+                textAnchor="middle"
                 className="font-mono"
                 fontSize="7"
                 fill="#94a3b8"
@@ -914,12 +932,12 @@ export function RedOceanSaturation({ lang }: { lang: "ko" | "en" }) {
                     {L.channels[bi].posts}
                   </span>
                 </div>
-                <div className="mt-1.5 flex gap-[3px] overflow-hidden">
+                <div className="mt-1.5 flex items-end gap-[3px] overflow-hidden">
                   {bar.rows.map((h, ri) => (
                     <motion.div
                       key={ri}
                       className="flex-1 rounded-t-sm"
-                      style={{ background: bar.tone, height: `${h * 5}px` }}
+                      style={{ background: bar.tone, height: `${h * 5}px`, transformOrigin: "bottom" }}
                       initial={{ scaleY: 0 }}
                       whileInView={{ scaleY: 1 }}
                       viewport={{ once: true }}
@@ -928,7 +946,7 @@ export function RedOceanSaturation({ lang }: { lang: "ko" | "en" }) {
                   ))}
                   <motion.div
                     className="flex-1 rounded-t-sm"
-                    style={{ background: "#ef4444", height: "48px", opacity: 0.85 }}
+                    style={{ background: "#ef4444", height: "48px", opacity: 0.85, transformOrigin: "bottom" }}
                     initial={{ scaleY: 0 }}
                     whileInView={{ scaleY: 1 }}
                     viewport={{ once: true }}
@@ -1028,35 +1046,35 @@ export function RedesignMapping({ lang }: { lang: "ko" | "en" }) {
 
   return (
     <div className="w-full rounded-[2.5rem] border border-slate-100 bg-white/70 backdrop-blur-md p-6 sm:p-8 shadow-sm overflow-hidden">
-      <div className="mb-6 sm:mb-8">
+      <div className="mb-4 sm:mb-5">
         <span className="text-[9px] font-black tracking-widest text-[#d4af37] uppercase font-mono">
           {L.eyebrow}
         </span>
         <h3
-          className="mt-2 text-lg sm:text-2xl font-black text-slate-950 leading-tight"
+          className="mt-1.5 text-lg sm:text-2xl font-black text-slate-950 leading-tight"
           style={{ wordBreak: "keep-all" }}
         >
           {L.title}
         </h3>
         <p
-          className="mt-2 max-w-2xl text-[11px] sm:text-xs text-slate-600 leading-relaxed"
+          className="mt-1.5 max-w-2xl text-[11px] sm:text-xs text-slate-600 leading-relaxed"
           style={{ wordBreak: "keep-all" }}
         >
           {L.subtitle}
         </p>
       </div>
 
-      <div className="mb-3 grid grid-cols-12 items-center gap-2 px-1">
-        <span className="col-span-5 font-mono uppercase tracking-widest text-[9px] text-slate-400">
+      <div className="mb-2 flex items-center gap-2 px-0.5">
+        <span className="flex-1 font-mono uppercase tracking-widest text-[9px] text-slate-400">
           {L.fromTag}
         </span>
-        <span className="col-span-2" aria-hidden="true" />
-        <span className="col-span-5 text-right font-mono uppercase tracking-widest text-[9px] text-[#d4af37]">
+        <span className="w-7 shrink-0 sm:w-9" aria-hidden="true" />
+        <span className="flex-1 text-right font-mono uppercase tracking-widest text-[9px] text-[#d4af37]">
           {L.toTag}
         </span>
       </div>
 
-      <div className="flex flex-col gap-3 sm:gap-4">
+      <div className="flex flex-col gap-2.5">
         {L.rows.map(
           (
             row: { from: string; fromSub: string; to: string; toSub: string },
@@ -1064,14 +1082,14 @@ export function RedesignMapping({ lang }: { lang: "ko" | "en" }) {
           ) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="grid grid-cols-12 items-stretch gap-2"
+              className="flex items-stretch gap-2"
             >
-              <div className="col-span-5 rounded-2xl border border-slate-100 bg-slate-50/60 p-3 sm:p-4">
-                <div className="mb-1.5 flex items-center gap-1.5">
+              <div className="min-w-0 flex-1 rounded-2xl border border-slate-100 bg-slate-50/60 px-3 py-2.5 sm:px-4 sm:py-3">
+                <div className="mb-1 flex items-center gap-1.5">
                   <span className="font-mono text-[9px] font-black tracking-widest text-slate-400">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -1084,15 +1102,18 @@ export function RedesignMapping({ lang }: { lang: "ko" | "en" }) {
                   {row.from}
                 </p>
                 <p
-                  className="mt-1 text-[10px] sm:text-[11px] text-slate-400 leading-snug"
+                  className="mt-0.5 text-[10px] sm:text-[11px] text-slate-400 leading-snug"
                   style={{ wordBreak: "keep-all" }}
                 >
                   {row.fromSub}
                 </p>
               </div>
 
-              <div className="col-span-2 flex items-center justify-center" aria-hidden="true">
-                <svg viewBox="0 0 56 28" className="w-full h-auto" aria-hidden="true">
+              <div
+                className="flex w-7 shrink-0 items-center justify-center sm:w-9"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 40 24" className="w-full h-auto" aria-hidden="true">
                   <defs>
                     <linearGradient id={`rm-arrow-${i}`} x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor="#cbd5e1" />
@@ -1101,27 +1122,27 @@ export function RedesignMapping({ lang }: { lang: "ko" | "en" }) {
                   </defs>
                   <line
                     x1="4"
-                    y1="14"
-                    x2="44"
-                    y2="14"
+                    y1="12"
+                    x2="28"
+                    y2="12"
                     stroke={`url(#rm-arrow-${i})`}
                     strokeWidth="2"
                     strokeLinecap="round"
                   />
                   <path
-                    d="M40 8 L50 14 L40 20"
+                    d="M25 7 L34 12 L25 17"
                     fill="none"
                     stroke="#d4af37"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
-                  <circle cx="4" cy="14" r="2.5" fill="#cbd5e1" />
+                  <circle cx="4" cy="12" r="2.5" fill="#cbd5e1" />
                 </svg>
               </div>
 
-              <div className="col-span-5 rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/[0.06] p-3 sm:p-4">
-                <div className="mb-1.5 flex items-center justify-end gap-1.5">
+              <div className="min-w-0 flex-1 rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/[0.06] px-3 py-2.5 sm:px-4 sm:py-3">
+                <div className="mb-1 flex items-center justify-end gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" aria-hidden="true" />
                   <span className="font-mono text-[9px] font-black tracking-widest text-[#d4af37]">
                     {String(i + 1).padStart(2, "0")}
@@ -1134,7 +1155,7 @@ export function RedesignMapping({ lang }: { lang: "ko" | "en" }) {
                   {row.to}
                 </p>
                 <p
-                  className="mt-1 text-right text-[10px] sm:text-[11px] text-slate-600 leading-snug"
+                  className="mt-0.5 text-right text-[10px] sm:text-[11px] text-slate-600 leading-snug"
                   style={{ wordBreak: "keep-all" }}
                 >
                   {row.toSub}
@@ -1183,14 +1204,12 @@ export function ConversionFunnel({ lang }: { lang: "ko" | "en" }) {
         };
 
   const golds = ["#e6cf7a", "#dcc066", "#d4af37", "#c39c2a", "#a9851f"];
-  const rowH = 56;
-  const gap = 14;
-  const topPad = 8;
-  const widths = [560, 452, 348, 248, 160];
+  // Funnel bars: widest -> narrowest. Even the narrowest (180) comfortably fits the % badge.
+  const widths = [100, 78, 60, 44, 34];
 
   return (
     <div className="w-full rounded-[2.5rem] border border-slate-100 bg-white/70 backdrop-blur-md p-6 sm:p-8 shadow-sm overflow-hidden">
-      <div className="flex items-start justify-between gap-4 mb-6">
+      <div className="flex items-start justify-between gap-4 mb-5">
         <div>
           <span className="text-[9px] font-black tracking-widest text-[#d4af37] uppercase font-mono">
             {L.eyebrow}
@@ -1202,11 +1221,11 @@ export function ConversionFunnel({ lang }: { lang: "ko" | "en" }) {
             {L.sub}
           </p>
         </div>
-        <div className="hidden sm:flex flex-col items-end gap-1.5">
+        <div className="hidden sm:flex flex-col items-end gap-1.5 shrink-0">
           <span className="font-mono uppercase tracking-widest text-[9px] text-slate-400">
             {L.trustLabel}
           </span>
-          <div className="flex flex-wrap justify-end gap-1.5">
+          <div className="flex flex-wrap justify-end gap-1.5 max-w-[180px]">
             {L.trust.map((t: string) => (
               <span
                 key={t}
@@ -1219,115 +1238,81 @@ export function ConversionFunnel({ lang }: { lang: "ko" | "en" }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-stretch">
-        <div className="relative">
-          <svg
-            viewBox={`0 0 600 ${topPad + L.stages.length * rowH + (L.stages.length - 1) * gap + 8}`}
-            className="w-full h-auto"
-          >
-            <defs>
-              <linearGradient id="cf-fade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#0f172a" stopOpacity="0.04" />
-                <stop offset="100%" stopColor="#0f172a" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            {L.stages.map((s, i: number) => {
-              const w = widths[i];
-              const x = (600 - w) / 2;
-              const y = topPad + i * (rowH + gap);
-              const isLast = i === L.stages.length - 1;
-              return (
-                <motion.g
-                  key={s.label}
-                  aria-hidden="true"
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
-                >
-                  {!isLast && (
-                    <path
-                      d={`M ${x + 18} ${y + rowH} L ${(600 - widths[i + 1]) / 2 + 18} ${y + rowH + gap} 
-                          L ${(600 + widths[i + 1]) / 2 - 18} ${y + rowH + gap} L ${x + w - 18} ${y + rowH} Z`}
-                      fill="url(#cf-fade)"
-                    />
-                  )}
-                  <rect
-                    x={x}
-                    y={y}
-                    width={w}
-                    height={rowH}
-                    rx={16}
-                    fill={golds[i]}
-                    fillOpacity={0.92}
-                  />
-                  <rect
-                    x={x}
-                    y={y}
-                    width={w}
-                    height={rowH}
-                    rx={16}
-                    fill="none"
-                    stroke="#0f172a"
-                    strokeOpacity={0.06}
-                    strokeWidth={1.5}
-                  />
-                  <text
-                    x={300}
-                    y={y + rowH / 2 - 3}
-                    textAnchor="middle"
-                    className="font-sans"
-                    fontSize="13"
-                    fontWeight="800"
-                    fill={i >= 3 ? "#ffffff" : "#0f172a"}
-                  >
-                    {s.label}
-                  </text>
-                  <text
-                    x={300}
-                    y={y + rowH / 2 + 14}
-                    textAnchor="middle"
-                    className="font-mono"
-                    fontSize="9.5"
-                    fontWeight="700"
-                    letterSpacing="1"
-                    fill={i >= 3 ? "#ffffff" : "#0f172a"}
-                    fillOpacity={i >= 3 ? 0.85 : 0.55}
-                  >
-                    {s.val}
-                  </text>
-                </motion.g>
-              );
-            })}
-          </svg>
-        </div>
-
-        <div className="flex flex-col justify-center gap-2 lg:w-44">
-          {L.stages.map((s, i: number) => (
+      {/* Compact horizontal funnel: each row = tapering bar (centered) + stage text. */}
+      <div className="flex flex-col gap-2">
+        {L.stages.map((s, i: number) => {
+          const w = widths[i];
+          const isLast = i === L.stages.length - 1;
+          return (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, x: 10 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.15 + i * 0.08, duration: 0.4 }}
-              className="flex items-start gap-2.5"
+              transition={{ delay: i * 0.08, duration: 0.45, ease: "easeOut" }}
+              className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-4"
             >
-              <span
-                aria-hidden="true"
-                className="mt-0.5 inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-                style={{ backgroundColor: golds[i] }}
-              />
-              <div style={{ wordBreak: "keep-all" }}>
-                <p className="text-[11px] font-bold text-slate-800 leading-tight">{s.label}</p>
-                <p className="text-[10px] text-slate-500 leading-snug">{s.desc}</p>
+              {/* Bar lane: tapering bar with label + % fully inside. */}
+              <div className="relative w-full">
+                <div
+                  className="relative mx-auto flex items-center justify-between rounded-2xl px-3.5 py-2.5"
+                  style={{
+                    width: `${w}%`,
+                    minWidth: "150px",
+                    backgroundColor: golds[i],
+                    boxShadow: "inset 0 0 0 1.5px rgba(15,23,42,0.06)",
+                  }}
+                >
+                  <span
+                    className="truncate text-[12px] sm:text-[13px] font-extrabold leading-none"
+                    style={{ color: i >= 3 ? "#ffffff" : "#0f172a", wordBreak: "keep-all" }}
+                  >
+                    {s.label}
+                  </span>
+                </div>
+                {!isLast && (
+                  <svg
+                    viewBox="0 0 100 8"
+                    preserveAspectRatio="none"
+                    className="pointer-events-none absolute inset-x-0 -bottom-2 mx-auto h-2 w-full"
+                    aria-hidden="true"
+                  >
+                    <defs>
+                      <linearGradient id={`cf-fade-${i}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#0f172a" stopOpacity="0.05" />
+                        <stop offset="100%" stopColor="#0f172a" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d={`M ${(100 - w) / 2 + 4} 0 L ${(100 - widths[i + 1]) / 2 + 4} 8 L ${
+                        (100 + widths[i + 1]) / 2 - 4
+                      } 8 L ${(100 + w) / 2 - 4} 0 Z`}
+                      fill={`url(#cf-fade-${i})`}
+                    />
+                  </svg>
+                )}
+              </div>
+
+              {/* Stage description, kept inside its cell. */}
+              <div
+                className="hidden min-w-[120px] max-w-[170px] sm:block"
+                style={{ wordBreak: "keep-all" }}
+              >
+                <div className="flex items-start gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="mt-1 inline-block h-2 w-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: golds[i] }}
+                  />
+                  <p className="text-[10px] leading-snug text-slate-500">{s.desc}</p>
+                </div>
               </div>
             </motion.div>
-          ))}
-        </div>
+          );
+        })}
       </div>
 
-      <div className="mt-6 flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-slate-50/50 px-4 py-3">
+      <div className="mt-5 flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-slate-50/50 px-4 py-3">
         <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" aria-hidden="true">
           <path
             d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z"
@@ -1336,7 +1321,14 @@ export function ConversionFunnel({ lang }: { lang: "ko" | "en" }) {
             strokeWidth={1.6}
             strokeLinejoin="round"
           />
-          <path d="M9 12l2 2 4-4" fill="none" stroke="#10b981" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M9 12l2 2 4-4"
+            fill="none"
+            stroke="#10b981"
+            strokeWidth={1.8}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
         <p className="text-[10px] sm:text-[11px] text-slate-600" style={{ wordBreak: "keep-all" }}>
           {L.note}
@@ -1384,19 +1376,29 @@ export function MultiChannelDiffusion({ lang }: { lang: "ko" | "en" }) {
           ],
         };
 
-  const cx = 150;
-  const cy = 110;
+  // Compact landscape fan: central node on the left, 6 channel chips fanning to the right.
+  // viewBox 300 x 188 -> ratio 0.63 (landscape). All node circles (r=15) kept >= 18px
+  // from every edge so nothing clips under the wrapper's overflow-hidden.
+  const cx = 70;
+  const cy = 94;
+  // three rows x two columns on the right, all well inside the 300x188 frame
   const spokes: { x: number; y: number }[] = [
-    { x: 32, y: 36 },
-    { x: 268, y: 36 },
-    { x: 16, y: 110 },
-    { x: 284, y: 110 },
-    { x: 32, y: 184 },
-    { x: 268, y: 184 },
+    { x: 178, y: 30 },
+    { x: 262, y: 30 },
+    { x: 178, y: 94 },
+    { x: 262, y: 94 },
+    { x: 178, y: 158 },
+    { x: 262, y: 158 },
   ];
 
   const Glyph = ({ id }: { id: string }) => {
-    const p = { fill: "none", stroke: "#0f172a", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+    const p = {
+      fill: "none",
+      stroke: "#0f172a",
+      strokeWidth: 1.6,
+      strokeLinecap: "round" as const,
+      strokeLinejoin: "round" as const,
+    };
     if (id === "ig")
       return (
         <g {...p}>
@@ -1441,18 +1443,21 @@ export function MultiChannelDiffusion({ lang }: { lang: "ko" | "en" }) {
 
   return (
     <div className="w-full rounded-[2.5rem] border border-slate-100 bg-white/70 backdrop-blur-md p-6 sm:p-8 shadow-sm overflow-hidden">
-      <div className="flex flex-col gap-1.5 mb-5">
+      <div className="flex flex-col gap-1.5 mb-4">
         <span className="text-[9px] font-black tracking-widest text-[#d4af37] uppercase font-mono">{L.eyebrow}</span>
         <h3 className="font-black text-slate-950 text-base sm:text-lg" style={{ wordBreak: "keep-all" }}>
           {L.title}
         </h3>
-        <p className="font-sans text-[11px] sm:text-xs text-slate-600 max-w-md leading-relaxed" style={{ wordBreak: "keep-all" }}>
+        <p
+          className="font-sans text-[11px] sm:text-xs text-slate-600 max-w-md leading-relaxed"
+          style={{ wordBreak: "keep-all" }}
+        >
           {L.desc}
         </p>
       </div>
 
       <div className="relative">
-        <svg viewBox="0 0 300 220" className="w-full h-auto" aria-hidden="true">
+        <svg viewBox="0 0 300 188" className="w-full h-auto" aria-hidden="true">
           <defs>
             <radialGradient id="mcd-core" cx="50%" cy="42%" r="60%">
               <stop offset="0%" stopColor="#fff" />
@@ -1476,7 +1481,7 @@ export function MultiChannelDiffusion({ lang }: { lang: "ko" | "en" }) {
             </g>
           ))}
 
-          {[34, 50].map((r, i) => (
+          {[30, 44].map((r, i) => (
             <motion.circle
               key={`pulse-${i}`}
               cx={cx}
@@ -1492,7 +1497,12 @@ export function MultiChannelDiffusion({ lang }: { lang: "ko" | "en" }) {
             />
           ))}
 
-          <motion.g initial={{ scale: 0.85, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+          <motion.g
+            initial={{ scale: 0.85, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <circle cx={cx} cy={cy} r={26} fill="url(#mcd-core)" stroke="#d4af37" strokeWidth={1.6} />
             <text x={cx} y={cy - 4} textAnchor="middle" className="font-mono" fontSize={6.5} fontWeight={700} fill="#0f172a">
               {L.core}
@@ -1512,8 +1522,8 @@ export function MultiChannelDiffusion({ lang }: { lang: "ko" | "en" }) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.7 + i * 0.12 }}
               >
-                <circle cx={s.x} cy={s.y} r={16} fill="#fff" stroke="#e2e8f0" strokeWidth={1.5} />
-                <g transform={`translate(${s.x} ${s.y}) scale(0.95)`}>
+                <circle cx={s.x} cy={s.y} r={15} fill="#fff" stroke="#e2e8f0" strokeWidth={1.5} />
+                <g transform={`translate(${s.x} ${s.y}) scale(0.9)`}>
                   <Glyph id={ch.id} />
                 </g>
               </motion.g>
@@ -1521,7 +1531,7 @@ export function MultiChannelDiffusion({ lang }: { lang: "ko" | "en" }) {
           })}
         </svg>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
+        <div className="grid grid-cols-3 gap-1.5 mt-3">
           {L.channels.map((ch, i) => (
             <motion.div
               key={ch.id}
@@ -1529,23 +1539,30 @@ export function MultiChannelDiffusion({ lang }: { lang: "ko" | "en" }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: 0.8 + i * 0.06 }}
-              className="flex items-center gap-2 rounded-2xl border border-slate-100 bg-white/60 px-3 py-2"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-100 bg-white/60 px-2 py-1.5 min-w-0"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37] shrink-0" />
-              <span className="flex flex-col leading-tight" style={{ wordBreak: "keep-all" }}>
-                <span className="font-black text-slate-950 text-[11px]">{ch.name}</span>
-                <span className="font-mono uppercase tracking-widest text-[9px] text-slate-400">{ch.tag}</span>
+              <span className="flex flex-col leading-tight min-w-0" style={{ wordBreak: "keep-all" }}>
+                <span className="font-black text-slate-950 text-[10px] truncate">{ch.name}</span>
+                <span className="font-mono uppercase tracking-wide text-[8px] text-slate-400 truncate">{ch.tag}</span>
               </span>
             </motion.div>
           ))}
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-5 pt-4 border-t border-slate-100">
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100">
         <span className="font-mono uppercase tracking-widest text-[10px] text-slate-500">{L.footL}</span>
-        <svg viewBox="0 0 40 8" className="h-2 w-12" aria-hidden="true">
+        <svg viewBox="0 0 40 8" className="h-2 w-12 shrink-0" aria-hidden="true">
           <line x1="2" y1="4" x2="34" y2="4" stroke="#d4af37" strokeWidth="1.5" strokeDasharray="2 2" />
-          <path d="M34 1 L38 4 L34 7" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M34 1 L38 4 L34 7"
+            fill="none"
+            stroke="#d4af37"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
         <span className="font-mono uppercase tracking-widest text-[10px] font-black text-[#10b981]">{L.footR}</span>
       </div>
@@ -1595,35 +1612,38 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
           flow: "Search-driven conversion flow",
         };
 
-  const icons: Record<string, ReactElement> = {
-    "01": (
-      <g>
-        <circle cx="12" cy="11" r="6" />
-        <line x1="16.5" y1="15.5" x2="21" y2="20" />
-      </g>
-    ),
-    "02": (
-      <g>
-        <rect x="4" y="4" width="16" height="16" rx="2" />
-        <line x1="8" y1="9" x2="16" y2="9" />
-        <line x1="8" y1="12.5" x2="16" y2="12.5" />
-        <line x1="8" y1="16" x2="12.5" y2="16" />
-      </g>
-    ),
-    "03": (
-      <g>
-        <rect x="4" y="5" width="16" height="14" rx="2" />
-        <line x1="4" y1="9" x2="20" y2="9" />
-        <circle cx="6.6" cy="7" r="0.5" />
-        <rect x="7.5" y="12" width="9" height="4.5" rx="1" />
-      </g>
-    ),
-    "04": (
+  const renderIcon = (tag: string) => {
+    if (tag === "01")
+      return (
+        <g>
+          <circle cx="12" cy="11" r="6" />
+          <line x1="16.5" y1="15.5" x2="21" y2="20" />
+        </g>
+      );
+    if (tag === "02")
+      return (
+        <g>
+          <rect x="4" y="4" width="16" height="16" rx="2" />
+          <line x1="8" y1="9" x2="16" y2="9" />
+          <line x1="8" y1="12.5" x2="16" y2="12.5" />
+          <line x1="8" y1="16" x2="12.5" y2="16" />
+        </g>
+      );
+    if (tag === "03")
+      return (
+        <g>
+          <rect x="4" y="5" width="16" height="14" rx="2" />
+          <line x1="4" y1="9" x2="20" y2="9" />
+          <circle cx="6.6" cy="7" r="0.5" />
+          <rect x="7.5" y="12" width="9" height="4.5" rx="1" />
+        </g>
+      );
+    return (
       <g>
         <path d="M4 6.5h16a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 16V8A1.5 1.5 0 0 1 4 6.5Z" />
         <path d="M3 8l9 6 9-6" />
       </g>
-    ),
+    );
   };
 
   return (
@@ -1646,7 +1666,7 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
         </p>
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center gap-2">
+      <div className="mt-5 flex flex-wrap items-center gap-2">
         {L.badges.map(({ k, d }, i) => (
           <motion.div
             key={k}
@@ -1670,7 +1690,7 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
       </div>
 
       <div className="mt-5 rounded-3xl border border-slate-100 bg-gradient-to-b from-white/60 to-slate-50/40 p-4 sm:p-5">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="flex h-7 items-center gap-1.5 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/10 px-3">
             <svg
               viewBox="0 0 24 24"
@@ -1704,25 +1724,21 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
           </svg>
         </div>
 
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-7 sm:items-center">
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-1.5">
           {L.steps.map((s, i) => {
             const last = i === L.steps.length - 1;
             return (
               <div
                 key={s.tag}
-                className={
-                  last
-                    ? "sm:col-span-1 contents sm:block"
-                    : "sm:col-span-2 contents sm:block"
-                }
+                className="flex flex-1 flex-col sm:flex-row sm:items-stretch"
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.96 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.12, duration: 0.4 }}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}
                   className={
-                    "relative flex flex-col gap-2 rounded-2xl border p-3.5 " +
+                    "relative flex w-full flex-1 flex-col gap-2 rounded-2xl border p-3 " +
                     (last
                       ? "border-emerald-200 bg-emerald-50/60"
                       : "border-slate-100 bg-white/80")
@@ -1731,7 +1747,7 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
                   <div className="flex items-center justify-between">
                     <span
                       className={
-                        "flex h-9 w-9 items-center justify-center rounded-xl " +
+                        "flex h-8 w-8 items-center justify-center rounded-xl " +
                         (last
                           ? "bg-emerald-500/10 text-emerald-600"
                           : "bg-slate-900/[0.04] text-slate-700")
@@ -1740,14 +1756,14 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
                       <svg
                         viewBox="0 0 24 24"
                         aria-hidden="true"
-                        className="h-5 w-5"
+                        className="h-[18px] w-[18px]"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth={1.6}
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        {icons[s.tag]}
+                        {renderIcon(s.tag)}
                       </svg>
                     </span>
                     <span
@@ -1761,20 +1777,20 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <span
-                      className="text-[13px] font-black text-slate-950"
+                      className="text-[13px] font-black leading-tight text-slate-950"
                       style={{ wordBreak: "keep-all" }}
                     >
                       {s.name}
                     </span>
                     <span
-                      className="text-[11px] text-slate-500"
+                      className="text-[10px] leading-snug text-slate-500"
                       style={{ wordBreak: "keep-all" }}
                     >
                       {s.desc}
                     </span>
                   </div>
                   {last && (
-                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white">
+                    <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white shadow-sm">
                       <svg
                         viewBox="0 0 24 24"
                         aria-hidden="true"
@@ -1793,12 +1809,12 @@ export function SearchToInquiry({ lang }: { lang: "ko" | "en" }) {
 
                 {!last && (
                   <div
-                    className="flex items-center justify-center py-0.5 sm:py-0"
+                    className="flex shrink-0 items-center justify-center self-center py-0.5 sm:px-0.5 sm:py-0"
                     aria-hidden="true"
                   >
                     <svg
                       viewBox="0 0 24 24"
-                      className="h-5 w-5 rotate-90 text-[#d4af37] sm:rotate-0"
+                      className="h-4 w-4 rotate-90 text-[#d4af37] sm:rotate-0"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth={2}
@@ -1867,10 +1883,11 @@ export function LandingReconstruction({ lang }: { lang: "ko" | "en" }) {
         };
 
   const blockColors = ["#0f172a", "#d4af37", "#10b981", "#0f172a"];
+  const pinColor = (i: number) => (i === 1 ? "#ef4444" : i === 2 ? "#10b981" : "#d4af37");
 
   return (
     <div className="w-full rounded-[2.5rem] border border-slate-100 bg-white/70 backdrop-blur-md p-6 sm:p-8 shadow-sm overflow-hidden">
-      <div className="mb-6">
+      <div className="mb-5">
         <span className="text-[9px] font-black tracking-widest text-[#d4af37] uppercase font-mono">
           {L.eyebrow}
         </span>
@@ -1888,99 +1905,103 @@ export function LandingReconstruction({ lang }: { lang: "ko" | "en" }) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-6 lg:gap-8 items-center">
-        {/* Wireframe phone/browser frame */}
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-5 lg:gap-7 items-center">
+        {/* Compact landscape browser wireframe */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative mx-auto w-full max-w-[300px]"
+          className="relative mx-auto w-full max-w-[400px]"
         >
-          <svg viewBox="0 0 300 420" className="w-full h-auto" role="img" aria-label="wireframe">
+          {/* viewBox 360x250 -> landscape ratio ~0.69, internal padding keeps labels inside */}
+          <svg viewBox="0 0 360 250" className="w-full h-auto" role="img" aria-label="wireframe">
             <defs>
               <linearGradient id="lrShade" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#ffffff" />
                 <stop offset="100%" stopColor="#f8fafc" />
               </linearGradient>
             </defs>
-            {/* device shell */}
-            <rect x="14" y="6" width="272" height="408" rx="30" fill="url(#lrShade)" stroke="#e2e8f0" strokeWidth="1.5" />
-            <rect x="14" y="6" width="272" height="408" rx="30" fill="none" stroke="#0f172a" strokeWidth="1.5" opacity="0.06" />
-            {/* browser chrome */}
-            <rect x="30" y="22" width="240" height="20" rx="10" fill="#f1f5f9" />
-            <circle cx="44" cy="32" r="3" fill="#cbd5e1" />
-            <circle cx="54" cy="32" r="3" fill="#e2e8f0" />
-            <circle cx="64" cy="32" r="3" fill="#e2e8f0" />
-            <rect x="84" y="27" width="178" height="10" rx="5" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+            {/* browser shell */}
+            <rect x="8" y="8" width="344" height="234" rx="18" fill="url(#lrShade)" stroke="#e2e8f0" strokeWidth="1.5" />
+            <rect x="8" y="8" width="344" height="234" rx="18" fill="none" stroke="#0f172a" strokeWidth="1.5" opacity="0.06" />
+            {/* browser chrome bar */}
+            <rect x="8" y="8" width="344" height="30" rx="18" fill="#f1f5f9" />
+            <rect x="8" y="26" width="344" height="12" fill="#f1f5f9" />
+            <circle cx="26" cy="23" r="3.2" fill="#cbd5e1" />
+            <circle cx="38" cy="23" r="3.2" fill="#e2e8f0" />
+            <circle cx="50" cy="23" r="3.2" fill="#e2e8f0" />
+            <rect x="66" y="17" width="276" height="12" rx="6" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
 
-            {/* stacked content blocks */}
+            {/* 4 stacked decision blocks laid out vertically inside the landscape viewport */}
             {[
-              { y: 56, h: 96, accent: blockColors[0] },
-              { y: 162, h: 84, accent: blockColors[1] },
-              { y: 256, h: 70, accent: blockColors[2] },
-              { y: 336, h: 64, accent: blockColors[3] },
+              { y: 50, h: 42, accent: blockColors[0] },
+              { y: 98, h: 44, accent: blockColors[1] },
+              { y: 148, h: 40, accent: blockColors[2] },
+              { y: 194, h: 40, accent: blockColors[3] },
             ].map((b, i) => (
               <g key={i}>
-                <rect x="30" y={b.y} width="240" height={b.h} rx="14" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.5" />
-                <rect x="30" y={b.y} width="5" height={b.h} rx="2.5" fill={b.accent} opacity="0.9" />
-                {/* skeleton lines */}
-                <rect x="46" y={b.y + 16} width={i === 0 ? 150 : 110} height="9" rx="4.5" fill="#0f172a" opacity={i === 0 ? 0.85 : 0.5} />
-                <rect x="46" y={b.y + 32} width="180" height="6" rx="3" fill="#e2e8f0" />
-                {i !== 3 && <rect x="46" y={b.y + 44} width="140" height="6" rx="3" fill="#eef2f6" />}
-                {/* evidence chips */}
+                <rect x="22" y={b.y} width="316" height={b.h} rx="11" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="22" y={b.y} width="5" height={b.h} rx="2.5" fill={b.accent} opacity="0.9" />
+                {/* heading skeleton line */}
+                <rect x="40" y={b.y + 11} width={i === 0 ? 184 : 132} height="9" rx="4.5" fill="#0f172a" opacity={i === 0 ? 0.85 : 0.5} />
+                {/* sub line (hidden on CTA row to leave room for the button) */}
+                {i !== 3 && (
+                  <rect x="40" y={b.y + 25} width="232" height="6" rx="3" fill="#e2e8f0" />
+                )}
+                {/* evidence chips on EVIDENCE row */}
                 {i === 1 && (
                   <g>
-                    <rect x="46" y={b.y + 54} width="46" height="16" rx="8" fill="#fbf5e3" stroke="#d4af37" strokeWidth="1" />
-                    <rect x="98" y={b.y + 54} width="46" height="16" rx="8" fill="#fbf5e3" stroke="#d4af37" strokeWidth="1" />
-                    <rect x="150" y={b.y + 54} width="46" height="16" rx="8" fill="#fbf5e3" stroke="#d4af37" strokeWidth="1" />
+                    <rect x="276" y={b.y + 9} width="18" height="14" rx="7" fill="#fbf5e3" stroke="#d4af37" strokeWidth="1" />
+                    <rect x="300" y={b.y + 9} width="18" height="14" rx="7" fill="#fbf5e3" stroke="#d4af37" strokeWidth="1" />
+                    <rect x="324" y={b.y + 9} width="18" height="14" rx="7" fill="#fbf5e3" stroke="#d4af37" strokeWidth="1" />
                   </g>
                 )}
-                {/* review stars */}
+                {/* review stars on REVIEWS row */}
                 {i === 2 && (
                   <g fill="#d4af37">
                     {[0, 1, 2, 3, 4].map((s) => (
-                      <circle key={s} cx={50 + s * 13} cy={b.y + 50} r="3.5" />
+                      <circle key={s} cx={290 + s * 11} cy={b.y + 16} r="3.4" />
                     ))}
                   </g>
                 )}
-                {/* CTA button */}
+                {/* CTA button on last row */}
                 {i === 3 && (
                   <g>
-                    <rect x="46" y={b.y + 30} width="208" height="22" rx="11" fill="#0f172a" />
-                    <rect x="120" y={b.y + 39} width="60" height="5" rx="2.5" fill="#ffffff" opacity="0.85" />
+                    <rect x="232" y={b.y + 9} width="98" height="22" rx="11" fill="#0f172a" />
+                    <rect x="263" y={b.y + 18} width="36" height="5" rx="2.5" fill="#ffffff" opacity="0.85" />
                   </g>
                 )}
               </g>
             ))}
           </svg>
-          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono uppercase tracking-widest text-[9px] text-slate-400">
+          <span className="mt-2 block text-center whitespace-nowrap font-mono uppercase tracking-widest text-[9px] text-slate-400">
             {L.flow}
           </span>
         </motion.div>
 
-        {/* Callout pins */}
-        <div className="flex flex-col gap-3">
+        {/* Callout pins in a compact 2x2 grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {L.pins.map((p, i) => (
             <motion.div
               key={p.n}
-              initial={{ opacity: 0, x: 14 }}
+              initial={{ opacity: 0, x: 12 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-white/60 p-3.5"
+              transition={{ duration: 0.4, delay: i * 0.07 }}
+              className="flex items-start gap-2.5 rounded-2xl border border-slate-100 bg-white/60 p-3"
             >
               <div className="relative shrink-0">
-                <svg viewBox="0 0 36 44" className="w-7 h-auto" aria-hidden="true">
+                <svg viewBox="0 0 36 44" className="w-6 h-auto" aria-hidden="true">
                   <path
                     d="M18 2C9.7 2 3 8.5 3 16.4c0 9 12 22 14.2 24.4a1.1 1.1 0 0 0 1.6 0C21 38.4 33 25.4 33 16.4 33 8.5 26.3 2 18 2Z"
                     fill="#ffffff"
-                    stroke={i === 1 ? "#ef4444" : i === 2 ? "#10b981" : "#d4af37"}
+                    stroke={pinColor(i)}
                     strokeWidth="2"
                   />
-                  <circle cx="18" cy="16" r="6.5" fill={i === 1 ? "#ef4444" : i === 2 ? "#10b981" : "#d4af37"} opacity="0.16" />
+                  <circle cx="18" cy="16" r="6.5" fill={pinColor(i)} opacity="0.16" />
                 </svg>
-                <span className="absolute inset-x-0 top-[7px] text-center font-mono text-[9px] font-black text-slate-950">
+                <span className="absolute inset-x-0 top-[6px] text-center font-mono text-[9px] font-black text-slate-950">
                   {p.n}
                 </span>
               </div>
@@ -2080,14 +2101,14 @@ export function HumanGate({ lang }: { lang: "ko" | "en" }) {
         {L.title}
       </h3>
       <p
-        className="mt-2 max-w-xl text-[11px] sm:text-xs text-slate-600 leading-relaxed"
+        className="mt-1.5 max-w-xl text-[11px] sm:text-xs text-slate-600 leading-relaxed"
         style={{ wordBreak: "keep-all" }}
       >
         {L.desc}
       </p>
 
       {/* Pipeline rail */}
-      <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
         {L.steps.map((s, i) => {
           const isGate = i === 2;
           return (
@@ -2098,14 +2119,14 @@ export function HumanGate({ lang }: { lang: "ko" | "en" }) {
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.08 }}
               className={
-                "relative rounded-2xl border p-4 " +
+                "relative rounded-2xl border px-3 pb-3 pt-3.5 " +
                 (isGate
                   ? "border-[#e7cf86] bg-gradient-to-b from-[#fdf8ec] to-white shadow-[0_8px_24px_-12px_rgba(212,175,55,0.45)]"
                   : "border-slate-100 bg-white/60")
               }
             >
               {isGate && (
-                <span className="absolute -top-2 left-4 rounded-full bg-[#d4af37] px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-white font-mono">
+                <span className="absolute -top-2 left-3 rounded-full bg-[#d4af37] px-2 py-0.5 text-[8px] font-black uppercase tracking-widest text-white font-mono">
                   GATE
                 </span>
               )}
@@ -2133,7 +2154,7 @@ export function HumanGate({ lang }: { lang: "ko" | "en" }) {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
-                  className="absolute top-1/2 -right-2.5 hidden h-5 w-5 -translate-y-1/2 sm:block"
+                  className="absolute top-1/2 -right-2 hidden h-5 w-5 -translate-y-1/2 sm:block"
                 >
                   <path
                     d="M5 12h12m0 0-5-5m5 5-5 5"
@@ -2151,21 +2172,21 @@ export function HumanGate({ lang }: { lang: "ko" | "en" }) {
       </div>
 
       {/* Detail panels */}
-      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+      <div className="mt-4 grid gap-3 lg:grid-cols-2">
         {/* Verify checklist */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="rounded-2xl border border-slate-100 bg-white/60 p-5"
+          className="rounded-2xl border border-slate-100 bg-white/60 p-4"
         >
           <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
             {L.checkTitle}
           </span>
-          <ul className="mt-3 space-y-2.5">
+          <ul className="mt-2.5 grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
             {L.checks.map((c) => (
-              <li key={c} className="flex items-center gap-2.5">
+              <li key={c} className="flex items-center gap-2">
                 <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4 shrink-0">
                   <circle cx="10" cy="10" r="8.5" fill="none" stroke="#10b981" strokeWidth="1.5" />
                   <path
@@ -2191,10 +2212,10 @@ export function HumanGate({ lang }: { lang: "ko" | "en" }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.18 }}
-          className="rounded-2xl border border-[#e7cf86] bg-gradient-to-b from-[#fdf8ec] to-white p-5"
+          className="rounded-2xl border border-[#e7cf86] bg-gradient-to-b from-[#fdf8ec] to-white p-4"
         >
           <div className="flex items-center gap-2">
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0">
               <path
                 d="M12 3.5l7 3v4.2c0 4.3-3 7.5-7 9-4-1.5-7-4.7-7-9V6.5l7-3z"
                 fill="none"
@@ -2207,21 +2228,23 @@ export function HumanGate({ lang }: { lang: "ko" | "en" }) {
               {L.gateTitle}
             </span>
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2">
+          <div className="mt-2.5 grid grid-cols-3 gap-2">
             {L.outcomes.map((o) => {
               const st = outcomeStyle[o.k];
               return (
                 <div
                   key={o.k}
-                  className={"rounded-xl ring-1 px-2.5 py-3 text-center " + st.ring + " " + st.bg}
+                  className={"rounded-xl ring-1 px-2 py-2.5 text-center " + st.ring + " " + st.bg}
                 >
                   <span
                     className="mx-auto block h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: st.dot }}
                     aria-hidden="true"
                   />
-                  <div className={"mt-2 text-xs font-black " + st.text}>{o.label}</div>
-                  <div className="mt-0.5 text-[10px] text-slate-500" style={{ wordBreak: "keep-all" }}>
+                  <div className={"mt-1.5 text-xs font-black " + st.text} style={{ wordBreak: "keep-all" }}>
+                    {o.label}
+                  </div>
+                  <div className="mt-0.5 text-[10px] leading-tight text-slate-500" style={{ wordBreak: "keep-all" }}>
                     {o.sub}
                   </div>
                 </div>
@@ -2229,7 +2252,7 @@ export function HumanGate({ lang }: { lang: "ko" | "en" }) {
             })}
           </div>
           <p
-            className="mt-3 text-[10px] leading-relaxed text-slate-500"
+            className="mt-2.5 text-[10px] leading-relaxed text-slate-500"
             style={{ wordBreak: "keep-all" }}
           >
             {L.note}
@@ -2286,10 +2309,12 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
           ],
         };
 
+  // Shorter spokes pull every outer node + its label well inside the
+  // padded viewBox so the longest labels never clip at the edges.
   const cx = 300;
-  const cy = 230;
-  const rx = 252;
-  const ry = 188;
+  const cy = 215;
+  const rx = 160;
+  const ry = 180;
   const n = L.modules.length;
   const nodes = L.modules.map((label, i) => {
     const a = -Math.PI / 2 + (i / n) * Math.PI * 2;
@@ -2329,7 +2354,7 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <svg viewBox="0 0 600 470" className="w-full h-auto">
+        <svg viewBox="0 0 600 420" className="w-full h-auto">
           <defs>
             <radialGradient id="osh-hub" cx="50%" cy="42%" r="65%">
               <stop offset="0%" stopColor="#ffffff" />
@@ -2380,7 +2405,7 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
 
           {nodes.map((nd) => {
             const dx =
-              nd.anchor === "start" ? 12 : nd.anchor === "end" ? -12 : 0;
+              nd.anchor === "start" ? 10 : nd.anchor === "end" ? -10 : 0;
             return (
               <motion.text
                 key={`t-${nd.i}`}
@@ -2405,7 +2430,7 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
             aria-hidden="true"
             cx={cx}
             cy={cy}
-            r={78}
+            r={86}
             fill="none"
             stroke="#d4af37"
             strokeWidth={1.5}
@@ -2428,7 +2453,7 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
             <circle
               cx={cx}
               cy={cy}
-              r={62}
+              r={70}
               fill="url(#osh-hub)"
               stroke="url(#osh-ring)"
               strokeWidth={2.5}
@@ -2436,22 +2461,22 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
             <circle
               cx={cx}
               cy={cy}
-              r={52}
+              r={59}
               fill="none"
               stroke="#0f172a"
               strokeWidth={1}
               strokeOpacity={0.06}
             />
-            <g aria-hidden="true" transform={`translate(${cx} ${cy - 26})`}>
+            <g aria-hidden="true" transform={`translate(${cx} ${cy - 28})`}>
               <path
-                d="M0 -9 L8 -4 L8 5 C8 10 4 13 0 14 C-4 13 -8 10 -8 5 L-8 -4 Z"
+                d="M0 -10 L9 -4.5 L9 5.5 C9 11 4.5 14.5 0 15.5 C-4.5 14.5 -9 11 -9 5.5 L-9 -4.5 Z"
                 fill="none"
                 stroke="#d4af37"
                 strokeWidth={1.8}
                 strokeLinejoin="round"
               />
               <path
-                d="M-3.5 2 L-1 4.5 L4 -1.5"
+                d="M-4 2 L-1 5 L4.5 -2"
                 fill="none"
                 stroke="#10b981"
                 strokeWidth={1.8}
@@ -2461,10 +2486,10 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
             </g>
             <text
               x={cx}
-              y={cy + 6}
+              y={cy + 7}
               textAnchor="middle"
               className="font-sans"
-              fontSize="16"
+              fontSize="17"
               fontWeight={900}
               fill="#0f172a"
             >
@@ -2472,7 +2497,7 @@ export function OneSystemHub({ lang }: { lang: "ko" | "en" }) {
             </text>
             <text
               x={cx}
-              y={cy + 24}
+              y={cy + 26}
               textAnchor="middle"
               className="font-mono"
               fontSize="9"
@@ -2534,6 +2559,14 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
 
   const ease = [0.16, 1, 0.3, 1] as const;
 
+  // compact landscape stair: viewBox 600 x 250 (ratio 0.42 graphic), padding kept
+  // so flag tip (x<=560), base label (x>=40) and step tops (y>=40) never clip.
+  const steps = [
+    { x: 150, y: 168, h: 52, i: 0 },
+    { x: 300, y: 126, h: 94, i: 1 },
+    { x: 450, y: 84, h: 136, i: 2 },
+  ];
+
   return (
     <div className="w-full rounded-[2.5rem] border border-slate-100 bg-white/70 backdrop-blur-md p-6 sm:p-8 shadow-sm overflow-hidden">
       <div className="flex flex-col gap-1">
@@ -2554,8 +2587,8 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
         </p>
       </div>
 
-      <div className="mt-6 relative">
-        <svg viewBox="0 0 600 360" className="w-full h-auto" aria-hidden="true">
+      <div className="mt-4">
+        <svg viewBox="0 0 600 250" className="w-full h-auto" aria-hidden="true">
           <defs>
             <linearGradient id="glc-step" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#ffffff" />
@@ -2567,9 +2600,9 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
             </linearGradient>
           </defs>
 
-          {/* ascending guide line */}
+          {/* ascending guide line — tucked inside padding */}
           <motion.path
-            d="M40 320 L200 320 L200 250 L340 250 L340 170 L480 170 L480 80"
+            d="M40 222 L150 222 L150 168 L300 168 L300 126 L450 126 L450 70"
             fill="none"
             stroke="#e2e8f0"
             strokeWidth={1.5}
@@ -2582,33 +2615,39 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
 
           {/* base block */}
           <motion.g
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease }}
           >
             <rect
               x={40}
-              y={300}
-              width={150}
-              height={44}
+              y={200}
+              width={110}
+              height={40}
               rx={12}
               fill="url(#glc-step)"
               stroke="#e2e8f0"
               strokeWidth={1.5}
             />
-            <circle cx={66} cy={322} r={5} fill="#94a3b8" />
+            <circle cx={64} cy={220} r={5} fill="#94a3b8" />
+            <text
+              x={80}
+              y={224}
+              fontSize={11}
+              fontWeight={700}
+              fill="#64748b"
+              style={{ wordBreak: "keep-all" }}
+            >
+              {L.base}
+            </text>
           </motion.g>
 
           {/* three rising steps */}
-          {[
-            { x: 200, y: 230, h: 110, i: 0 },
-            { x: 340, y: 150, h: 190, i: 1 },
-            { x: 480, y: 60, h: 280, i: 2 },
-          ].map(({ x, y, h, i }) => (
+          {steps.map(({ x, y, h, i }) => (
             <motion.g
               key={i}
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.25 + i * 0.18, ease }}
@@ -2616,7 +2655,7 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
               <rect
                 x={x}
                 y={y}
-                width={130}
+                width={110}
                 height={h}
                 rx={14}
                 fill="url(#glc-step)"
@@ -2626,15 +2665,15 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
               <rect
                 x={x}
                 y={y}
-                width={130}
-                height={40}
+                width={110}
+                height={36}
                 rx={14}
                 fill="#0f172a"
                 opacity={0.03}
               />
               <text
-                x={x + 16}
-                y={y + 26}
+                x={x + 14}
+                y={y + 24}
                 className="font-mono"
                 fontSize={11}
                 fontWeight={800}
@@ -2644,36 +2683,44 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
                 {L.steps[i].n}
               </text>
               {/* up arrow chip */}
-              <circle cx={x + 105} cy={y + 20} r={11} fill="#10b981" opacity={0.12} />
+              <circle cx={x + 88} cy={y + 18} r={11} fill="#10b981" opacity={0.12} />
               <path
-                d={`M${x + 105} ${y + 15} L${x + 100} ${y + 23} L${x + 110} ${y + 23} Z`}
+                d={`M${x + 88} ${y + 13} L${x + 83} ${y + 21} L${x + 93} ${y + 21} Z`}
                 fill="#10b981"
               />
             </motion.g>
           ))}
 
-          {/* gold flag at top */}
+          {/* gold flag at top — tip pulled inward (x<=556) so it never clips right edge */}
           <motion.g
             initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, delay: 0.95, ease }}
-            style={{ transformOrigin: "545px 50px" }}
+            style={{ transformOrigin: "505px 60px" }}
           >
-            <line x1={545} y1={28} x2={545} y2={66} stroke="#0f172a" strokeWidth={2} strokeLinecap="round" />
+            <line
+              x1={505}
+              y1={40}
+              x2={505}
+              y2={84}
+              stroke="#0f172a"
+              strokeWidth={2}
+              strokeLinecap="round"
+            />
             <path
-              d="M545 28 L596 36 L545 52 Z"
+              d="M505 40 L556 48 L505 64 Z"
               fill="url(#glc-flag)"
               stroke="#d4af37"
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
-            <circle cx={545} cy={66} r={4} fill="#d4af37" />
+            <circle cx={505} cy={84} r={4} fill="#d4af37" />
           </motion.g>
         </svg>
 
-        {/* step labels overlay */}
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+        {/* step labels — compact, snug under the stair */}
+        <div className="mt-3 grid grid-cols-3 gap-2">
           {L.steps.map((s: { n: string; t: string; d: string }, i: number) => (
             <motion.div
               key={s.n}
@@ -2681,21 +2728,19 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.3 + i * 0.12, ease }}
-              className="rounded-2xl border border-slate-100 bg-white/60 px-3 py-2.5"
+              className="rounded-2xl border border-slate-100 bg-white/60 px-2.5 py-2"
             >
-              <div className="flex items-center gap-2">
-                <span className="font-mono uppercase tracking-widest text-[9px] text-[#d4af37] font-black">
-                  STEP {s.n}
-                </span>
-              </div>
+              <span className="font-mono uppercase tracking-widest text-[9px] text-[#d4af37] font-black">
+                STEP {s.n}
+              </span>
               <p
-                className="mt-0.5 text-xs font-black text-slate-950"
+                className="mt-0.5 text-[11px] sm:text-xs font-black text-slate-950 leading-tight"
                 style={{ wordBreak: "keep-all" }}
               >
                 {s.t}
               </p>
               <p
-                className="text-[10px] text-slate-500"
+                className="text-[10px] text-slate-500 leading-tight"
                 style={{ wordBreak: "keep-all" }}
               >
                 {s.d}
@@ -2711,22 +2756,28 @@ export function GrowthLadderClosing({ lang }: { lang: "ko" | "en" }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 1.05, ease }}
-        className="mt-4 flex items-center gap-2 rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/[0.06] px-4 py-3"
+        className="mt-3 flex items-center gap-2 rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/[0.06] px-3.5 py-2.5"
       >
         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#d4af37]/15">
           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" aria-hidden="true">
-            <path d="M5 13l4 4L19 7" stroke="#d4af37" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M5 13l4 4L19 7"
+              stroke="#d4af37"
+              strokeWidth={2.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </span>
         <p
-          className="text-[11px] sm:text-xs font-black text-slate-950"
+          className="text-[11px] sm:text-xs font-black text-slate-950 leading-tight"
           style={{ wordBreak: "keep-all" }}
         >
           {L.flag}
         </p>
       </motion.div>
 
-      <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
+      <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
         <span className="font-mono uppercase tracking-widest text-[10px] text-slate-400">
           TRUSTA
         </span>
@@ -2804,7 +2855,7 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
         </p>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="mt-5 grid grid-cols-2 lg:grid-cols-3 gap-2.5">
         {L.metrics.map((m: { k: string; d: string }, i: number) => {
           const series = bars[i];
           const max = Math.max(...series);
@@ -2815,30 +2866,46 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.06 }}
-              className="rounded-2xl border border-slate-100 bg-white/60 p-3.5 flex flex-col gap-2.5"
+              className="rounded-2xl border border-slate-100 bg-white/60 px-3 py-2.5 flex flex-col gap-2"
             >
-              <div className="flex items-baseline justify-between">
+              <div className="flex items-baseline justify-between gap-1.5">
                 <span
-                  className="text-sm font-black text-slate-950"
+                  className="text-sm font-black text-slate-950 leading-none"
                   style={{ wordBreak: "keep-all" }}
                 >
                   {m.k}
                 </span>
-                <span className="font-mono uppercase tracking-widest text-[9px] text-slate-400">
+                <span
+                  className="font-mono uppercase tracking-wide text-[8px] text-slate-400 leading-none text-right"
+                  style={{ wordBreak: "keep-all" }}
+                >
                   {m.d}
                 </span>
               </div>
-              <svg viewBox="0 0 120 36" className="w-full h-auto" aria-hidden="true">
+              <svg
+                viewBox="0 0 124 30"
+                className="w-full h-auto"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <line
+                  x1="1"
+                  y1="28"
+                  x2="123"
+                  y2="28"
+                  stroke="#f1f5f9"
+                  strokeWidth="1.5"
+                />
                 {series.map((v: number, j: number) => {
-                  const h = (v / max) * 28;
+                  const h = (v / max) * 24 + 2;
                   const x = j * 20 + 2;
                   const last = j === series.length - 1;
                   return (
                     <rect
                       key={j}
                       x={x}
-                      y={32 - h}
-                      width="13"
+                      y={27 - h}
+                      width="14"
                       height={h}
                       rx="3"
                       fill={last ? "#d4af37" : "#e2e8f0"}
@@ -2846,14 +2913,6 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
                     />
                   );
                 })}
-                <line
-                  x1="0"
-                  y1="33.5"
-                  x2="120"
-                  y2="33.5"
-                  stroke="#f1f5f9"
-                  strokeWidth="1.5"
-                />
               </svg>
             </motion.div>
           );
@@ -2865,10 +2924,10 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-6 rounded-2xl border border-slate-100 bg-white/60 p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-5"
+        className="mt-4 rounded-2xl border border-slate-100 bg-white/60 p-4 flex flex-col sm:flex-row sm:items-center gap-4"
       >
         <div className="shrink-0">
-          <svg viewBox="0 0 120 120" className="w-28 h-auto" aria-hidden="true">
+          <svg viewBox="0 0 96 96" className="w-20 h-20" aria-hidden="true">
             <defs>
               <marker
                 id="loopArrow"
@@ -2881,9 +2940,9 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
                 <path d="M1 1 L7 4 L1 7 Z" fill="#d4af37" />
               </marker>
             </defs>
-            <circle cx="60" cy="60" r="44" fill="none" stroke="#f1f5f9" strokeWidth="10" />
+            <circle cx="48" cy="48" r="34" fill="none" stroke="#f1f5f9" strokeWidth="9" />
             <path
-              d="M60 16 A44 44 0 1 1 23 84"
+              d="M48 14 A34 34 0 1 1 19.5 65"
               fill="none"
               stroke="#d4af37"
               strokeWidth="2"
@@ -2892,23 +2951,23 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
             />
             {[0, 1, 2, 3].map((p: number) => {
               const ang = (p / 4) * Math.PI * 2 - Math.PI / 2;
-              const cx = 60 + Math.cos(ang) * 44;
-              const cy = 60 + Math.sin(ang) * 44;
+              const cx = 48 + Math.cos(ang) * 34;
+              const cy = 48 + Math.sin(ang) * 34;
               return (
                 <circle
                   key={p}
                   cx={cx}
                   cy={cy}
-                  r="4.5"
+                  r="4"
                   fill="#fff"
                   stroke="#0f172a"
                   strokeWidth="1.5"
                 />
               );
             })}
-            <circle cx="60" cy="60" r="13" fill="#0f172a" />
+            <circle cx="48" cy="48" r="11" fill="#0f172a" />
             <path
-              d="M55 60 L58.5 63.5 L65 56"
+              d="M43.5 48 L46.5 51 L52.5 44.5"
               fill="none"
               stroke="#fff"
               strokeWidth="2"
@@ -2918,24 +2977,26 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
           </svg>
         </div>
 
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full min-w-0">
           <span className="font-mono uppercase tracking-widest text-[10px] text-[#d4af37]">
             {L.loopTitle}
           </span>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1.5">
             {L.loop.map((step: string, i: number) => (
-              <div key={step} className="flex items-center gap-2">
+              <div key={step} className="flex items-center gap-1.5">
                 <div
-                  className="flex items-center gap-1.5 rounded-full border border-slate-100 bg-white/70 px-3 py-1.5"
+                  className="flex items-center gap-1.5 rounded-full border border-slate-100 bg-white/70 px-2.5 py-1"
                   style={{ wordBreak: "keep-all" }}
                 >
-                  <span className="font-mono text-[9px] font-black text-slate-400">
+                  <span className="font-mono text-[9px] font-black text-slate-400 leading-none">
                     0{i + 1}
                   </span>
-                  <span className="text-[11px] font-bold text-slate-700">{step}</span>
+                  <span className="text-[11px] font-bold text-slate-700 leading-none">
+                    {step}
+                  </span>
                 </div>
                 {i < L.loop.length - 1 && (
-                  <svg viewBox="0 0 16 12" className="w-3.5 h-auto" aria-hidden="true">
+                  <svg viewBox="0 0 16 12" className="w-3.5 shrink-0 h-auto" aria-hidden="true">
                     <path
                       d="M2 6 H12 M9 3 L13 6 L9 9"
                       fill="none"
@@ -2950,7 +3011,7 @@ export function PerformanceDashboard({ lang }: { lang: "ko" | "en" }) {
             ))}
           </div>
           <p
-            className="mt-3 text-[10px] text-slate-500 leading-relaxed"
+            className="mt-2 text-[10px] text-slate-500 leading-relaxed"
             style={{ wordBreak: "keep-all" }}
           >
             {L.note}
@@ -3022,11 +3083,11 @@ export function MonthlyCalendar({ lang }: { lang: "ko" | "en" }) {
       </div>
 
       {/* Legend */}
-      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5">
         {tags.map((t) => (
-          <div key={t.id} className="flex items-center gap-1.5">
+          <div key={t.id} className="flex items-center gap-1.5 min-w-0">
             <span
-              className="inline-block h-2.5 w-2.5 rounded-[3px]"
+              className="inline-block h-2.5 w-2.5 rounded-[3px] shrink-0"
               style={{ backgroundColor: t.color }}
               aria-hidden="true"
             />
@@ -3041,11 +3102,11 @@ export function MonthlyCalendar({ lang }: { lang: "ko" | "en" }) {
       </div>
 
       {/* Weekday header */}
-      <div className="mt-5 grid grid-cols-7 gap-1.5 sm:gap-2">
+      <div className="mt-4 grid grid-cols-7 gap-1 sm:gap-1.5">
         {L.weekdays.map((w, i) => (
           <div
             key={w}
-            className={`text-center font-mono uppercase tracking-widest text-[9px] sm:text-[10px] pb-1 ${
+            className={`text-center font-mono uppercase tracking-widest text-[9px] sm:text-[10px] pb-0.5 ${
               i >= 5 ? "text-[#d4af37]" : "text-slate-400"
             }`}
           >
@@ -3054,8 +3115,8 @@ export function MonthlyCalendar({ lang }: { lang: "ko" | "en" }) {
         ))}
       </div>
 
-      {/* Calendar grid */}
-      <div className="mt-1 grid grid-cols-7 gap-1.5 sm:gap-2">
+      {/* Calendar grid — content-driven compact rows (no aspect-square) */}
+      <div className="mt-0.5 grid grid-cols-7 gap-1 sm:gap-1.5">
         {grid.map((week, wi) =>
           week.map((cell, di) => {
             const idx = wi * 7 + di;
@@ -3067,7 +3128,7 @@ export function MonthlyCalendar({ lang }: { lang: "ko" | "en" }) {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: 0.012 * idx }}
-                className={`relative aspect-square rounded-xl border p-1 sm:p-1.5 flex flex-col gap-1 ${
+                className={`relative min-h-[3.25rem] sm:min-h-[3.75rem] rounded-lg border p-1 sm:p-1.5 flex flex-col ${
                   isWeekend
                     ? "border-slate-100 bg-slate-50/40"
                     : "border-slate-100 bg-white/60"
@@ -3076,23 +3137,23 @@ export function MonthlyCalendar({ lang }: { lang: "ko" | "en" }) {
                 <span className="font-mono text-[8px] sm:text-[9px] text-slate-300 leading-none self-end">
                   {String(idx + 1).padStart(2, "0")}
                 </span>
-                <div className="flex flex-col gap-0.5 sm:gap-1 mt-auto">
+                <div className="flex flex-col gap-0.5 mt-auto">
                   {cell.map((tid, ti) => {
                     const tag = tagMap[tid];
                     if (!tag) return null;
                     return (
                       <div
                         key={`${tid}-${ti}`}
-                        className="flex items-center gap-1 rounded-[5px] px-1 py-[2px]"
+                        className="flex items-start gap-1 rounded-[5px] px-1 py-[2px]"
                         style={{ backgroundColor: tag.color + "1a" }}
                       >
                         <span
-                          className="inline-block h-1.5 w-1.5 rounded-full shrink-0"
+                          className="inline-block h-1.5 w-1.5 rounded-full shrink-0 mt-[3px]"
                           style={{ backgroundColor: tag.color }}
                           aria-hidden="true"
                         />
                         <span
-                          className="truncate font-sans text-[7px] sm:text-[9px] font-bold leading-none"
+                          className="font-sans text-[7px] sm:text-[9px] font-bold leading-tight"
                           style={{ color: tag.color, wordBreak: "keep-all" }}
                         >
                           {lang === "ko" ? tag.ko : tag.en}
@@ -3107,10 +3168,10 @@ export function MonthlyCalendar({ lang }: { lang: "ko" | "en" }) {
         )}
       </div>
 
-      <div className="mt-4 flex items-center gap-1.5">
+      <div className="mt-3 flex items-center gap-1.5">
         <svg
           viewBox="0 0 24 24"
-          className="w-3 h-3 text-slate-300"
+          className="w-3 h-3 text-slate-300 shrink-0"
           fill="none"
           stroke="currentColor"
           strokeWidth={1.8}
