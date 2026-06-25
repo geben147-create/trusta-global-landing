@@ -1,0 +1,15 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# scratch / local-only
+*.bak
+_preview_shots/
+_shot*.mjs
+_gen.py
+.vite/

@@ -1,0 +1,6 @@
+{
+  "name": "Trusta Global",
+  "description": "Global Medical Marketing OS providing multilingual social media content, high-converting landing pages, secure messaging flows, and medical ad copy risk evaluations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
